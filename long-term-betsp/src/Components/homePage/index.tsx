@@ -1,4 +1,4 @@
-import { ButtonTypes, submitButton } from "./../../UI/submitButton";
+import { ButtonTypes, submitButton } from "../../UI/submitButton";
 import logo from "../../Resources/images/money.jpg";
 const HomePage = (): JSX.Element => {
   return (
