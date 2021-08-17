@@ -54,25 +54,29 @@ h2 {
   font-size: 30px;
   color: white;
 }
+h3 {
+  font-size: 16px;
+  color: white;
+}
 
 /*////////////////////////////
 ///    BASIC PAGE SETTINGS ///
 ///////////////////////////*/
 .page-wrapper {
   height: 100vh;
-  padding: 40px 70px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: black;
+  background-color: #555555;
 }
 
-/*////////////////////////////
-///        HOME PAGE      ///
-///////////////////////////*/
-.home-page-row-wrapper {
- max-width: 800px;
+/* .page-inner-wrapper {
+  width: 800px;
+} */
+
+.row-wrapper {
+  width: 800px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -80,11 +84,24 @@ h2 {
   margin-bottom: 70px;
 }
 
-.home-page-row-wrapper img {
-  height: 45px;
-}
+/*////////////////////////////
+///             UI         ///
+///////////////////////////*/
+
+/*////////////////////////////
+///        HOME PAGE      ///
+///////////////////////////*/
+
 .home-page-btn {
   height: 100px;
   width: 200px;
   margin: 0px 15px;
+}
+
+/*////////////////////////////
+///       NEW BETS PAGE   ///
+///////////////////////////*/
+.label-for-input {
+  margin-right: 15px;
+  color: white;
 }
