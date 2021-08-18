@@ -2,6 +2,7 @@ import { ButtonTypes, SubmitButton } from "../../UI/submitButton";
 import { scroller } from "react-scroll";
 import BetPage from "../newBetPage";
 import { Element } from "react-scroll";
+import OldBetsPage from "../oldBetsPage";
 
 const HomePage = (): JSX.Element => {
   const scrollToElement = (element: string | undefined) => {
@@ -27,19 +28,22 @@ const HomePage = (): JSX.Element => {
             text="BET?"
             styleName={`${ButtonTypes.Error + " home-page-btn"}`}
             onClick={scrollToElement}
-            element="betPage"
+            element="newBetPage"
           />
           <h2>or</h2>
           <SubmitButton
             text="CHECK BETS?"
             styleName={`${ButtonTypes.Primary + " home-page-btn"}`}
             onClick={scrollToElement}
-            element="betPage"
+            element="oldBetsPage"
           />
         </div>
       </div>
-      <Element name="betPage">
+      <Element name="newBetPage">
         <BetPage />
+      </Element>
+      <Element name="oldBetsPage">
+        <OldBetsPage />
       </Element>
     </div>
   );

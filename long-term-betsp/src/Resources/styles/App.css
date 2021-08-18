@@ -85,10 +85,6 @@ h3 {
 }
 
 /*////////////////////////////
-///             UI         ///
-///////////////////////////*/
-
-/*////////////////////////////
 ///        HOME PAGE      ///
 ///////////////////////////*/
 
@@ -104,4 +100,30 @@ h3 {
 .label-for-input {
   margin-right: 15px;
   color: white;
+}
+
+/*////////////////////////////
+///     OLD BETS PAGE     ///
+///////////////////////////*/
+.winner {
+  color: #92cc41;
+}
+tbody {
+  font-size: 12px;
+}
+.middle-cell {
+  max-width: 160px;
+}
+.big-cell {
+  max-width: 200px;
+}
+
+.pending {
+  background-color: #f7d51d;
+}
+.closed {
+  background-color: #61dafb;
+}
+.overdue {
+  background-color: #555555;
 }
