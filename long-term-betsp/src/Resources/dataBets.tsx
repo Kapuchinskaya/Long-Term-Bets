@@ -1,7 +1,6 @@
 enum StatusTypes {
-  Pending = "pending",
-  Closed = "closed",
-  Overdue = "overdue",
+  Active = "active",
+  Finished = "finished",
 }
 
 class Bet {
@@ -18,11 +17,11 @@ class Bet {
 let bets: Bet[] = [];
 
 const betOne = new Bet(
-  "AntonAnton",
+  "Anton",
   "Ola",
   "That she won't get hired",
   "Jan 2021",
-  "pending",
+  "active",
   "---"
 );
 
@@ -31,7 +30,7 @@ const betTwo = new Bet(
   "Kira",
   "That she will learn reading",
   "Jan 2021",
-  "closed",
+  "finished",
   "Kira"
 );
 const betThree = new Bet(
@@ -39,8 +38,8 @@ const betThree = new Bet(
   "Kira",
   "That she will learn reading",
   "Jan 2021",
-  "overdue",
-  "Kira"
+  "active",
+  "---"
 );
 
 bets.push(betOne);

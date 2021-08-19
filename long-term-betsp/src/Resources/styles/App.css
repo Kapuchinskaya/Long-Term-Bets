@@ -81,7 +81,7 @@ h3 {
   flex-direction: row;
   align-items: center;
   justify-content: space-evenly;
-  margin-bottom: 70px;
+  margin-bottom: 50px;
 }
 
 /*////////////////////////////
@@ -89,7 +89,7 @@ h3 {
 ///////////////////////////*/
 
 .home-page-btn {
-  height: 100px;
+  height: 90px;
   width: 200px;
   margin: 0px 15px;
 }
@@ -108,6 +108,11 @@ h3 {
 .winner {
   color: #92cc41;
 }
+
+.nes-table.is-dark::before {
+  position: static;
+}
+
 tbody {
   font-size: 12px;
 }
@@ -118,12 +123,17 @@ tbody {
   max-width: 200px;
 }
 
-.pending {
-  background-color: #f7d51d;
+.active {
+  color: #92cc41;
 }
-.closed {
-  background-color: #61dafb;
+.finished {
+  color: #61dafb;
 }
-.overdue {
-  background-color: #555555;
+
+.error-messages-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #e76e55;
 }
