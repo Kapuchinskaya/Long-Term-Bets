@@ -1,5 +1,6 @@
 import firebase from "firebase/app";
 import "firebase/app";
+import "firebase/firestore";
 import "firebase/database";
 
 const config = {
@@ -15,7 +16,9 @@ const config = {
 // Initialize Firebase
 firebase.initializeApp(config);
 
-const firebaseDB = firebase.database();
-const firebaseMatches = firebaseDB.ref("matches");
+//passing data to FB
 
-export { firebase, firebaseMatches };
+const DB = firebase.firestore();
+const betsCollection = DB.collection("bets");
+const scoresCollection = DB.collection("scores");
+export { betsCollection, scoresCollection, firebase };

@@ -1,7 +1,3 @@
-// let Debaters: string[] = [];
-let debaters = ["Anton", "Olga", "Kira"];
-let status = ["in progress", "overdue", "finished"];
-
 interface SelectFieldProps {
   labelValue: string;
   htmlFor: string;
@@ -41,4 +37,4 @@ const SelectField = ({
   );
 };
 
-export { debaters, status, SelectField };
+export { SelectField };

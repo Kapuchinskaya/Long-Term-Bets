@@ -1,7 +1,9 @@
-import { debaters, SelectField } from "../../UI/selectField";
+import { SelectField } from "../../UI/selectField";
 import { ButtonTypes } from "../../UI/submitButton";
 
 import { ChangeEvent, useState } from "react";
+import { debaters } from "../../Resources/dataBets";
+import { betsCollection } from "../../firebase";
 
 const BetPage = (): JSX.Element => {
   const [whoFirst, setWhoFirst] = useState("");
@@ -94,6 +96,8 @@ const BetPage = (): JSX.Element => {
     whoSecond: string;
     topic: string;
     dateBet: string;
+    status: string;
+    winner: string;
   }
   const onSave = () => {
     const newBet: Bet = {
@@ -101,6 +105,8 @@ const BetPage = (): JSX.Element => {
       whoSecond,
       topic,
       dateBet,
+      status: "active",
+      winner: "---",
     };
 
     const newErrors = validateNewBet(newBet);
@@ -108,6 +114,12 @@ const BetPage = (): JSX.Element => {
     if (newErrors.length === 0) {
       onClear();
       setErrors([]);
+      try {
+        betsCollection.add(newBet);
+      } catch (error) {
+        console.log(error);
+      }
+
       return newBet;
     }
 
