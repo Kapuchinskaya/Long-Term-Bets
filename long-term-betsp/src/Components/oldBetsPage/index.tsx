@@ -1,5 +1,5 @@
 import { scroller } from "react-scroll";
-import { debaters } from "../../Resources/dataBets";
+import { debaters, winners } from "../../Resources/dataBets";
 import { useEffect, useState } from "react";
 import { ButtonTypes, SubmitButton } from "../../UI/submitButton";
 import { statusTypes } from "../../Resources/dataBets";
@@ -16,7 +16,7 @@ interface Bet {
 }
 
 interface Score {
-  debater: string;
+  winner: string;
   result: number;
 }
 
@@ -25,7 +25,6 @@ const OldBetsPage = () => {
     undefined
   );
   const [betsFromBase, setBetsFromBase] = useState<Bet[]>([]);
-  // const [scores, setScore] = useState<Score[]>([]);
 
   useEffect(() => {
     getBetsSnapshot();
@@ -118,9 +117,9 @@ const OldBetsPage = () => {
               value={bet.winner}
               onChange={(event) => handleWinnerChange(event.target.value, bet)}
             >
-              {debaters.map((debater) => (
-                <option key={debater} value={debater}>
-                  {debater}
+              {winners.map((winner) => (
+                <option key={winner} value={winner}>
+                  {winner}
                 </option>
               ))}
             </select>
@@ -179,13 +178,15 @@ const OldBetsPage = () => {
   const getScores = () => {
     const scores: Score[] = [];
 
-    debaters.forEach((debater) => {
-      const result = betsFromBase.filter(
-        (bet) => bet.winner === debater
-      ).length;
-      scores.push({ debater, result } as Score);
+    winners.forEach((winner) => {
+      const result = betsFromBase
+        .filter((bet) => bet.status === "finished")
+        .filter((bet) => bet.winner === winner).length;
+      winner === "---"
+        ? scores.push({ winner: "no winner", result } as Score)
+        : scores.push({ winner, result } as Score);
     });
-
+    console.log(scores);
     return scores;
   };
 
@@ -196,7 +197,7 @@ const OldBetsPage = () => {
 
         {getScores().map((score, index) => (
           <div key={index} className={"score-item winner"}>
-            <p>{`${score.debater} : ${score.result}`}</p>
+            <p>{`${score.winner} : ${score.result}`}</p>
           </div>
         ))}
       </div>
