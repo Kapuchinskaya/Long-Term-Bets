@@ -3,6 +3,7 @@ import { scroller } from "react-scroll";
 import BetPage from "../newBetPage";
 import { Element } from "react-scroll";
 import OldBetsPage from "../oldBetsPage";
+import ChoosePage from "../choosePage";
 
 const HomePage = (): JSX.Element => {
   const scrollToElement = (element: string | undefined) => {
@@ -17,28 +18,7 @@ const HomePage = (): JSX.Element => {
 
   return (
     <div>
-      <div className="page-wrapper">
-        <div className="row-wrapper">
-          <i className="nes-icon coin is-large"></i>
-          <h1>long term bets</h1>
-        </div>
-        <div className="row-wrapper">
-          <h2>You wanna</h2>
-          <SubmitButton
-            text="BET?"
-            styleName={`${ButtonTypes.Error + " home-page-btn"}`}
-            onClick={scrollToElement}
-            element="newBetPage"
-          />
-          <h2>or</h2>
-          <SubmitButton
-            text="CHECK BETS?"
-            styleName={`${ButtonTypes.Primary + " home-page-btn"}`}
-            onClick={scrollToElement}
-            element="oldBetsPage"
-          />
-        </div>
-      </div>
+      <ChoosePage toScroll={scrollToElement} />
       <Element name="newBetPage">
         <BetPage />
       </Element>
