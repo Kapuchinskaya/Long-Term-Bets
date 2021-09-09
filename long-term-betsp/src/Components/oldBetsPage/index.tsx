@@ -1,61 +1,31 @@
 import { scroller } from "react-scroll";
-import { debaters, winners } from "../../Resources/dataBets";
-import { useEffect, useState } from "react";
+import { winners } from "../../Resources/dataBets";
+import { useState } from "react";
 import { ButtonTypes, SubmitButton } from "../../UI/submitButton";
 import { statusTypes } from "../../Resources/dataBets";
 import { betsCollection } from "../../firebase";
-
-interface Bet {
-  id: string;
-  whoFirst: string;
-  whoSecond: string;
-  topic: string;
-  dateBet: string;
-  status: string;
-  winner: string;
-}
+import { Bet } from "../homePage";
+import Heading from "./heading";
 
 interface Score {
   winner: string;
   result: number;
 }
 
-const OldBetsPage = () => {
+interface OldBetsProps {
+  getBetsSnapshot: () => Promise<void>;
+  betsFromBase: Bet[];
+  updateBetsFromBase: (bets: Bet[]) => void;
+}
+
+const OldBetsPage = ({
+  getBetsSnapshot,
+  betsFromBase,
+  updateBetsFromBase,
+}: OldBetsProps) => {
   const [updatedIndex, setUpdatedIndex] = useState<string | undefined>(
     undefined
   );
-  const [betsFromBase, setBetsFromBase] = useState<Bet[]>([]);
-
-  useEffect(() => {
-    getBetsSnapshot();
-  }, []);
-
-  const getBetsSnapshot = async () => {
-    try {
-      const snapshot = await betsCollection.get();
-      if (snapshot && snapshot.docs.length === 0) {
-        return;
-      }
-
-      const betsFromBase: Bet[] = snapshot.docs.map((doc) => {
-        const { whoFirst, whoSecond, topic, dateBet, status, winner } =
-          doc.data();
-
-        return {
-          id: doc.id,
-          whoFirst,
-          whoSecond,
-          topic,
-          dateBet,
-          status,
-          winner,
-        };
-      });
-      setBetsFromBase(betsFromBase);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   const scrollToElement = (element: string | undefined) => {
     if (!element) return;
@@ -69,8 +39,10 @@ const OldBetsPage = () => {
 
   const handleDelete = async (id: string) => {
     try {
+      debugger;
       await betsCollection.doc(id).delete();
       await getBetsSnapshot();
+      // updateBetsFromBase(betsFromBase);
     } catch (error) {
       console.log(error);
     }
@@ -105,7 +77,7 @@ const OldBetsPage = () => {
     if (updatedStatusBet) {
       updatedStatusBet.status = value;
     }
-    setBetsFromBase(copiedBetsFromBase);
+    updateBetsFromBase(copiedBetsFromBase);
   };
 
   const getWinnerCell = (bet: Bet) => {
@@ -143,7 +115,7 @@ const OldBetsPage = () => {
     if (updatedWinnerBet) {
       updatedWinnerBet.winner = value;
     }
-    setBetsFromBase(copiedBetsFromBase);
+    updateBetsFromBase(copiedBetsFromBase);
   };
 
   const getButtonsCell = (bet: Bet) => {
@@ -175,83 +147,63 @@ const OldBetsPage = () => {
     setUpdatedIndex(undefined);
   };
 
-  const getScores = () => {
-    const scores: Score[] = [];
-
-    winners.forEach((winner) => {
-      const result = betsFromBase
-        .filter((bet) => bet.status === "finished")
-        .filter((bet) => bet.winner === winner).length;
-      winner === "---"
-        ? scores.push({ winner: "no winner", result } as Score)
-        : scores.push({ winner, result } as Score);
-    });
-    console.log(scores);
-    return scores;
+  const getTable = (): JSX.Element => {
+    return betsFromBase.length === 0 ? (
+      <div className="row-wrapper">
+        <h2>There are no bets - create the 1st one!</h2>
+        <SubmitButton
+          text="BET?"
+          styleName={`${ButtonTypes.Error + " home-page-btn"}`}
+          onClick={scrollToElement}
+          element="newBetPage"
+        />
+      </div>
+    ) : (
+      <table className="nes-table is-bordered is-dark">
+        <thead>
+          <tr>
+            <th>WHO bets</th>
+            <th>WHO</th>
+            <th>that</th>
+            <th>till</th>
+            <th>status</th>
+            <th>winner</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {betsFromBase.map((bet) => (
+            <tr key={bet.id}>
+              <th className="middle-cell">{bet.whoFirst}</th>
+              <th className="middle-cell">{bet.whoSecond}</th>
+              <th className="big-cell">{bet.topic}</th>
+              <th className="middle-cell">{bet.dateBet}</th>
+              {getStatusCell(bet)}
+              {getWinnerCell(bet)}
+              <th>
+                {getButtonsCell(bet)}
+                <button
+                  type="button"
+                  className="nes-btn is-error"
+                  onClick={() => handleDelete(bet.id)}
+                >
+                  delete
+                </button>
+              </th>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
   };
 
   return (
     <div className="page-wrapper">
-      <div className="row-wrapper">
-        <h3>SCORE</h3>
-
-        {getScores().map((score, index) => (
-          <div key={index} className={"score-item winner"}>
-            <p>{`${score.winner} : ${score.result}`}</p>
-          </div>
-        ))}
-      </div>
-      <div className="nes-table-responsive">
-        {betsFromBase.length === 0 ? (
-          <div className="row-wrapper">
-            <h2>There are no bets - create the 1st one!</h2>
-            <SubmitButton
-              text="BET?"
-              styleName={`${ButtonTypes.Error + " home-page-btn"}`}
-              onClick={scrollToElement}
-              element="newBetPage"
-            />
-          </div>
-        ) : (
-          <table className="nes-table is-bordered is-dark">
-            <thead>
-              <tr>
-                <th>WHO bets</th>
-                <th>WHO</th>
-                <th>that</th>
-                <th>till</th>
-                <th>status</th>
-                <th>winner</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {betsFromBase.map((bet) => (
-                <tr key={bet.id}>
-                  <th className="middle-cell">{bet.whoFirst}</th>
-                  <th className="middle-cell">{bet.whoSecond}</th>
-                  <th className="big-cell">{bet.topic}</th>
-                  <th className="middle-cell">{bet.dateBet}</th>
-                  {getStatusCell(bet)}
-                  {getWinnerCell(bet)}
-                  <th>
-                    {getButtonsCell(bet)}
-                    <button
-                      type="button"
-                      className="nes-btn is-error"
-                      onClick={() => handleDelete(bet.id)}
-                    >
-                      delete
-                    </button>
-                  </th>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
+      <Heading betsFromBase={betsFromBase} />
+      <div className="nes-table-responsive">{getTable()}</div>
     </div>
   );
 };
 
-export default OldBetsPage;
+export { OldBetsPage };
+export type { Score };

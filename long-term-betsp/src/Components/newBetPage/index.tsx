@@ -1,11 +1,14 @@
 import { SelectField } from "../../UI/selectField";
-import { ButtonTypes } from "../../UI/submitButton";
-
+import { ButtonTypes, SubmitButton } from "../../UI/submitButton";
 import { ChangeEvent, useState } from "react";
 import { debaters } from "../../Resources/dataBets";
 import { betsCollection } from "../../firebase";
 
-const BetPage = (): JSX.Element => {
+interface BetPageProps {
+  getBetsSnapshot: () => Promise<void>;
+}
+
+const BetPage = ({ getBetsSnapshot }: BetPageProps): JSX.Element => {
   const [whoFirst, setWhoFirst] = useState("");
   const [whoSecond, setWhoSecond] = useState("");
   const [topic, setTopic] = useState("");
@@ -99,7 +102,7 @@ const BetPage = (): JSX.Element => {
     status: string;
     winner: string;
   }
-  const onSave = () => {
+  const onSave = async () => {
     const newBet: Bet = {
       whoFirst,
       whoSecond,
@@ -119,10 +122,9 @@ const BetPage = (): JSX.Element => {
       } catch (error) {
         console.log(error);
       }
-
-      return newBet;
     }
 
+    await getBetsSnapshot();
     setErrors(newErrors);
   };
 

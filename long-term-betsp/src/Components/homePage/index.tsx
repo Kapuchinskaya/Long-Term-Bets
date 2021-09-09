@@ -1,11 +1,60 @@
-import { ButtonTypes, SubmitButton } from "../../UI/submitButton";
 import { scroller } from "react-scroll";
 import BetPage from "../newBetPage";
 import { Element } from "react-scroll";
-import OldBetsPage from "../oldBetsPage";
+import {OldBetsPage} from "../oldBetsPage";
 import ChoosePage from "../choosePage";
+import { betsCollection } from "../../firebase";
+import { useEffect, useState } from "react";
+
+interface Bet {
+  id: string;
+  whoFirst: string;
+  whoSecond: string;
+  topic: string;
+  dateBet: string;
+  status: string;
+  winner: string;
+}
 
 const HomePage = (): JSX.Element => {
+  const [betsFromBase, setBetsFromBase] = useState<Bet[]>([]);
+
+  useEffect(() => {
+    getBetsSnapshot();
+  }, []);
+
+  const getBetsSnapshot = async () => {
+    debugger;
+    try {
+      const snapshot = await betsCollection.get();
+      // if (snapshot && snapshot.docs.length === 0) {
+      //   return;
+      // }
+
+      const betsFromBase: Bet[] = snapshot.docs.map((doc) => {
+        const { whoFirst, whoSecond, topic, dateBet, status, winner } =
+          doc.data();
+
+        return {
+          id: doc.id,
+          whoFirst,
+          whoSecond,
+          topic,
+          dateBet,
+          status,
+          winner,
+        };
+      });
+      setBetsFromBase(betsFromBase);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const updateBetsFromBase = (bets: Bet[]) => {
+    setBetsFromBase(bets);
+  };
+
   const scrollToElement = (element: string | undefined) => {
     if (!element) return;
     scroller.scrollTo(element, {
@@ -20,12 +69,17 @@ const HomePage = (): JSX.Element => {
     <div>
       <ChoosePage toScroll={scrollToElement} />
       <Element name="newBetPage">
-        <BetPage />
+        <BetPage getBetsSnapshot={getBetsSnapshot} />
       </Element>
       <Element name="oldBetsPage">
-        <OldBetsPage />
+        <OldBetsPage
+          getBetsSnapshot={getBetsSnapshot}
+          betsFromBase={betsFromBase}
+          updateBetsFromBase={updateBetsFromBase}
+        />
       </Element>
     </div>
   );
 };
-export default HomePage;
+export { HomePage };
+export type { Bet };
